@@ -3,6 +3,7 @@ from mcp.server.fastmcp import FastMCP
 from tavily import TavilyClient
 import os
 from dice_roller import DiceRoller
+from openfoodfacts_upc_search import OpenFoodFactsLookup
 
 load_dotenv()
 
@@ -21,13 +22,18 @@ def roll_dice(notation: str, num_rolls: int = 1) -> str:
     roller = DiceRoller(notation, num_rolls)
     return str(roller)
 
-"""
-Add your own tool here, and then use it through Cursor!
-"""
+# """
+# Add your own tool here, and then use it through Cursor!
+# """
+# @mcp.tool()
+# def YOUR_TOOL_NAME(query: str) -> str:
+#     """YOUR_TOOL_DESCRIPTION"""
+#     return "YOUR_TOOL_RESPONSE"
+
 @mcp.tool()
-def YOUR_TOOL_NAME(query: str) -> str:
-    """YOUR_TOOL_DESCRIPTION"""
-    return "YOUR_TOOL_RESPONSE"
+def openfoodfacts_lookup(upc: str) -> str:
+    """Look up product information from OpenFoodFacts using a valid UPC code"""
+    return OpenFoodFactsLookup()._run(upc)
 
 if __name__ == "__main__":
     mcp.run(transport="stdio")
